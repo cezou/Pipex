@@ -1,0 +1,10 @@
+Makefile
+PIPEX_TESTER
+include
+objs
+pipex
+pipex-tester
+squidin
+squidout
+srcs
+trash.c
