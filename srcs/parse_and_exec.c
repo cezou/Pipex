@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cezou <cezou@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:25:46 by cviegas           #+#    #+#             */
-/*   Updated: 2023/12/20 13:42:58 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/06 23:27:52 by cezou            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	exec_in_path(t_pipex *p, size_t cmd)
 {
-	char	*cmd_in_path;
 	char	*path_full;
 	size_t	i;
 

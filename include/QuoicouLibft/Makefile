@@ -1,5 +1,8 @@
 NAME = libft.a
 
+UP = \033[1A
+ERASE = \033[0J
+
 all: check_libft
 
 check_libft:
@@ -25,11 +28,10 @@ $(NAME):
 	@rm minmax.a
 
 echo:
-	@echo "\033[33m               ⚫⚫🟢\033[0m"
-	@echo "\033[33m  Ouaaais, c'est ca qui m'fallait\033[0m"
+	@echo "$(UP)$(UP)$(ERASE)\033[1;32mMade QuoicouLibft :)\033[0m"
 
 making:
-	@echo "\n\033[35m🦑🦑🦑 Making QuoicouLibft... 🦑🦑🦑\033[0m"
+	@echo "\033[1;35m🦑🦑🦑 Making QuoicouLibft... 🦑🦑🦑\033[0m"
 
 oclean:
 	@make --silent fclean -C ./libft
@@ -38,16 +40,15 @@ oclean:
 	@make --silent fclean -C ./minmax
 
 clean: clean_o clean_a 
-	@echo "\n\033[35m🦑🦑🦑 Crampting QuoicouLibft... 🦑🦑🦑\033[0m"
+	@echo "\033[35m🦑🦑🦑 Crampting QuoicouLibft... 🦑🦑🦑\033[0m"
 	@make --silent fclean -C ./libft
 	@echo "\033[31m          Redlight FIRST LIBFT!\033[0m"
 	@make --silent fclean -C ./gnl
-	@echo "\033[31m              Redlight GNL!\033[0m"
+	@echo "$(UP)$(ERASE)\033[31m              Redlight GNL!\033[0m"
 	@make --silent fclean -C ./printfd
-	@echo "\033[31m            Redlight PRINTFD!\033[0m"
+	@echo "$(UP)$(ERASE)\033[31m            Redlight PRINTFD!\033[0m"
 	@make --silent fclean -C ./minmax
-	@echo "\033[31m            Redlight MINMAX!\033[0m"
-	@echo "                 🔴⚫⚫"
+	@echo "$(UP)$(ERASE)\033[31m            Redlight MINMAX!\033[0m"
 
 fclean:
 	@if [ -f $(NAME) ]; then \
@@ -56,7 +57,7 @@ fclean:
 
 fclean_no_check: clean
 	@rm -f $(NAME) 
-	@echo "\033[33m  La QuoicouLibft s'est faite cramptée\033[0m"
+	@echo "$(UP)$(UP)$(ERASE)\033[1;31mQuoicouLibft crampted :(\033[0m"
 
 re: fclean all
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cezou <cezou@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2023/12/19 03:11:09 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/06 23:30:29 by cezou            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void	child_pid(t_pipex *p, char **av)
 
 void	parent_ppid(t_pipex *p, char **av)
 {
-	waitpid(-1, &p->child_wstatus, 0);
+	wait(NULL);
 	dup2(p->fd_out, STDOUT);
-	dup2(p->end[READ], STDIN);
 	close(p->end[WRITE]);
+	dup2(p->end[READ], STDIN);
 	store_commands(p, av);
 	exec_in_path(p, 1);
 	clean_pipex(p);
@@ -43,8 +43,9 @@ int	main(int ac, char **av, char **env)
 	t_pipex	p;
 	pid_t	ppid;
 
-	if (ac < 5)
-		return (ft_printfd(2, "./pipex infile cmd1 ... cmdn outfile\n"), 1);
+	if (ac != 5)
+		return ((void)ft_printfd(STDERR, "./pipex infile cmd1 cmd2 outfile\n"),
+			FAILURE);
 	p = init_pipex(ac, av, env);
 	if (pipe(p.end) < 0)
 		return (clean_pipex(&p), perror("Pipe"), errno);
