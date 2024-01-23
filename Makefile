@@ -28,6 +28,7 @@ $(NAME): $(SRCS) $(MANDATORY)
 	@$(CC) $(CFLAGS) $(SRCS) $(MANDATORY) -o $(NAME) $(LIBFT)
 
 $(NAMEB): $(SRCSBONUS) $(BONUS)
+	@mkdir -p objs
 	@echo "\033[1;32m   ● Made Bonus\033[0m"
 	@$(CC) $(CFLAGS) $(SRCS) $(BONUS) -o $(NAMEB) $(LIBFT)
 	@cp $(NAMEB) $(NAME)
@@ -43,6 +44,7 @@ fclean:
 
 fclean_no_check: clean
 	@rm -f $(NAME) $(NAMEB)
+	@rm -rf objs
 	@echo "\033[1;31m   ● Pipex crampted\033[0m"
 
 re : fclean all

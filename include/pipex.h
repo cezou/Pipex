@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 22:13:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/23 19:41:10 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/23 19:52:19 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,5 @@ void		errors_holder_fd(t_pipex *p, char *file_in, char *file_out);
 void		store_commands(t_pipex *p, char **av);
 void		exec_in_path(t_pipex *p, size_t cmd);
 void		exec_in_path_old(char **path, char **cmd_args, char **env);
-int			parent_ppid(t_pipex *p, pid_t last);
 
 #endif

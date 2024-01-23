@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/23 19:42:59 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/23 20:11:08 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void	first_pid(t_pipex *p, char **av)
 {
 	dup2(p->fd_in, STDIN);
+	close(p->fd_in);
 	dup2(p->end[WRITE], STDOUT);
 	close(p->end[READ]);
-	close(p->fd_in);
 	store_commands(p, av);
 	exec_in_path(p, 0);
 	clean_pipex(p);

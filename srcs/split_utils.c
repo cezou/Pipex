@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:24:28 by cviegas           #+#    #+#             */
-/*   Updated: 2023/12/19 03:11:06 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/23 19:51:15 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	print_split(char **split)
 	i = 0;
 	while (split[i])
 	{
-		ft_printfd(STDERR_FILENO, "%s", split[i++]);
+		ft_printfd(STDERR, "%s", split[i++]);
 		if (split[i])
-			ft_printfd(STDERR_FILENO, " ");
+			ft_printfd(STDERR, " ");
 	}
 }
 

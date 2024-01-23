@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/23 19:44:25 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/23 20:11:50 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,37 +53,47 @@
 // 	exit(errno);
 // }
 
-void	first_child_pid(t_pipex *p, char **av)
+void	first_child_pid(t_pipex *p, char **av, int i)
 {
-	p->is_first = false;
 	dup2(p->fd_in, STDIN);
-	dup2(p->end[WRITE], STDOUT);
-	close(p->end[READ]);
 	close(p->fd_in);
+	close(p->end[READ]);
+	dup2(p->end[WRITE], STDOUT);
 	store_commands(p, av);
-	exec_in_path(p, 0);
+	exec_in_path(p, i);
 	clean_pipex(p);
 	close(p->end[WRITE]);
 	exit(errno);
 }
 
-void	last_child_pid(t_pipex *p, char **av)
+void	last_child_pid(t_pipex *p, char **av, int i)
 {
-	close(p->end[READ]);
 	dup2(p->fd_out, STDOUT);
+	close(p->fd_out);
+	close(p->end[WRITE]);
 	dup2(p->end[READ], STDIN);
 	store_commands(p, av);
-	exec_in_path(p, p->nb_commands - 2);
+	exec_in_path(p, i);
 	clean_pipex(p);
-	close(p->end[WRITE]);
+	close(p->end[READ]);
 	exit(errno);
+}
+
+static int	parent_ppid(t_pipex *p, pid_t last)
+{
+	while ("squidgame")
+	{
+		if (wait(&p->child_wstatus) != last)
+			break ;
+	}
+	return (WEXITSTATUS(p->child_wstatus));
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	p;
 	pid_t	ppid;
-	size_t	i;
+	int		i;
 
 	i = 0;
 	if (ac < 5)
@@ -91,7 +101,7 @@ int	main(int ac, char **av, char **env)
 	p = init_pipex(ac, av, env);
 	if (pipe(p.end) < 0)
 		return (clean_pipex(&p), perror("Pipe"), errno);
-	while (i < p.nb_commands)
+	while (i < p.nb_commands - 1)
 	{
 		if (i == p.nb_commands - 2)
 			p.is_last = true;
@@ -99,9 +109,10 @@ int	main(int ac, char **av, char **env)
 		if (ppid < 0)
 			return (clean_pipex(&p), perror("Fork"), errno);
 		if (!ppid && i == 0)
-			first_child_pid(&p, av);
+			first_child_pid(&p, av, i);
 		if (!ppid && p.is_last)
-			last_child_pid(&p, av);
+			last_child_pid(&p, av, i);
+		p.is_first = false;
 		i++;
 	}
 	return (parent_ppid(&p, ppid));
