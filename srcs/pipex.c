@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/23 19:26:52 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/23 19:42:59 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,12 @@ void	second_pid(t_pipex *p, char **av)
 	exit(errno);
 }
 
-int	parent_ppid(t_pipex *p, pid_t pid)
+int	parent_ppid(t_pipex *p, pid_t last)
 {
 	while ("squidgame")
 	{
-		if (wait(&p->child_wstatus) == pid)
-		{
-		}
-		else
-		{
+		if (wait(&p->child_wstatus) != last)
 			break ;
-		}
 	}
 	return (WEXITSTATUS(p->child_wstatus));
 }

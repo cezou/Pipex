@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cezou <cezou@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/08 17:32:08 by cezou            ###   ########.fr       */
+/*   Updated: 2024/01/23 19:44:25 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	first_child_pid(t_pipex *p, char **av)
 	store_commands(p, av);
 	exec_in_path(p, 0);
 	clean_pipex(p);
-	ft_printfd(2, "failed\n");
 	close(p->end[WRITE]);
 	exit(errno);
 }
@@ -76,7 +75,6 @@ void	last_child_pid(t_pipex *p, char **av)
 	store_commands(p, av);
 	exec_in_path(p, p->nb_commands - 2);
 	clean_pipex(p);
-	ft_printfd(2, "failed\n");
 	close(p->end[WRITE]);
 	exit(errno);
 }
@@ -101,17 +99,10 @@ int	main(int ac, char **av, char **env)
 		if (ppid < 0)
 			return (clean_pipex(&p), perror("Fork"), errno);
 		if (!ppid && i == 0)
-		{
-			ft_printfd(2, "FIRST\n");
 			first_child_pid(&p, av);
-		}
 		if (!ppid && p.is_last)
-		{
-			ft_printfd(2, "LAST\n");
 			last_child_pid(&p, av);
-		}
-		else
-			wait(NULL);
 		i++;
 	}
+	return (parent_ppid(&p, ppid));
 }
