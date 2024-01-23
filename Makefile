@@ -2,7 +2,7 @@ NAME = pipex
 NAMEB = objs/pipex_bonus
 
 CC = cc
-CFLAGS =
+CFLAGS = -Wall -Wextra -Werror
 
 IDIR = include
 LIBFT = $(IDIR)/QuoicouLibft/libft.a
@@ -24,11 +24,11 @@ QuoicouLibft:
 	@make --silent -C $(IDIR)/QuoicouLibft
 
 $(NAME): $(SRCS) $(MANDATORY)
-	@echo "\033[1;32m    Made Pipex\033[0m"
+	@echo "\033[1;32m   ● Made Pipex\033[0m"
 	@$(CC) $(CFLAGS) $(SRCS) $(MANDATORY) -o $(NAME) $(LIBFT)
 
 $(NAMEB): $(SRCSBONUS) $(BONUS)
-	@echo "\033[1;32mMade Bonus Pipex\033[0m"
+	@echo "\033[1;32m   ● Made Bonus\033[0m"
 	@$(CC) $(CFLAGS) $(SRCS) $(BONUS) -o $(NAMEB) $(LIBFT)
 	@cp $(NAMEB) $(NAME)
 
@@ -43,7 +43,7 @@ fclean:
 
 fclean_no_check: clean
 	@rm -f $(NAME) $(NAMEB)
-	@echo "\033[1;31m    Pipex crampted\033[0m"
+	@echo "\033[1;31m   ● Pipex crampted\033[0m"
 
 re : fclean all
 

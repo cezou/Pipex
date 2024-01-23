@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:33:49 by cviegas           #+#    #+#             */
-/*   Updated: 2023/12/12 22:07:36 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/22 14:58:46 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ char				*ft_substr(char const *s, unsigned int start, size_t len);
 char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				**ft_split(char const *s, char c);
-char				**ft_split_charset(char *str, char *charset);
+char				**ft_split_charset(const char *str, char *charset);
+
 char				*ft_itoa(int n);
+char				*ft_ltoa(long long int n);
 
 // fd
 void				ft_putchar_fd(char c, int fd);
@@ -64,6 +66,12 @@ int					ft_putnbr_fd(int n, int fd);
 // BONUS
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
+
+// split_charset utils
+int					is_sep(const char c, char *charset);
+int					lenbsep(const char *s, char *charset, int indice_s);
+int					ft_nb_mots(const char *str, char *charset);
+char				**if_str_null(const char *str);
 
 // Linked list
 typedef struct s_list

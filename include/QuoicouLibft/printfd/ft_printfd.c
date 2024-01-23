@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 17:16:18 by cviegas           #+#    #+#             */
-/*   Updated: 2023/12/15 23:35:48 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/13 19:12:58 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "limits.h"
 #include <stdarg.h>
 
-int	case_percent(const char *s, int i, va_list ap, int fd)
+static int	case_percent(const char *s, int i, va_list ap, int fd)
 {
 	i++;
 	if (s[i] == '%')
@@ -61,6 +61,26 @@ int	ft_printfd(int fd, const char *s, ...)
 	}
 	va_end(ap);
 	return (nb_printed);
+}
+
+void	v_printfd(int fd, const char *s, ...)
+{
+	va_list	ap;
+	int		i;
+
+	if (!s)
+		return ;
+	va_start(ap, s);
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '%')
+			case_percent(s, i++, ap, fd);
+		else
+			ft_putchar_fd(s[i], fd);
+		i++;
+	}
+	va_end(ap);
 }
 
 // #include <stdio.h>

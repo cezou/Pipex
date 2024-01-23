@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 15:56:03 by cviegas           #+#    #+#             */
-/*   Updated: 2023/11/06 17:50:04 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/12 16:26:50 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_isdigit(int c)
 }
 
 // int main(int ac, char **av)
-// {	
+// {
 // 	printf("%d\n", ft_isdigit('a'));
 // 	printf("%d\n", ft_isdigit('0'));
 // 	if (ac == 2)

@@ -7,10 +7,10 @@ all: check_libft
 
 check_libft:
 	@if [ ! -f $(NAME) ]; then \
-			make making; \
-			make $(NAME); \
-			make echo; \
-			make oclean; \
+			make --silent making; \
+			make --silent $(NAME); \
+			make --silent echo; \
+			make --silent oclean; \
 	fi
 
 $(NAME):
@@ -46,7 +46,7 @@ clean: clean_o clean_a
 	@make --silent fclean -C ./gnl
 	@echo "$(UP)$(ERASE)\033[31m              Redlight GNL!\033[0m"
 	@make --silent fclean -C ./printfd
-	@echo "$(UP)$(ERASE)\033[31m            Redlight PRINTFD!\033[0m"
+	@echo "$(UP)$(ERASE)\033[31m            Redlight PRINTFs!\033[0m"
 	@make --silent fclean -C ./minmax
 	@echo "$(UP)$(ERASE)\033[31m            Redlight MINMAX!\033[0m"
 

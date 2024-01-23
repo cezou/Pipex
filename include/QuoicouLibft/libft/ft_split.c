@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 00:52:52 by cviegas           #+#    #+#             */
-/*   Updated: 2023/12/19 03:13:08 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/13 18:55:56 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static int	size_until_sep(char const *s, char sep, int indice)
 
 static int	nb_words(char const *s, char c)
 {
-	int		i;
-	int		word;
+	int	i;
+	int	word;
 
 	i = 0;
 	while (s[i] == c && s[i])
@@ -55,16 +55,13 @@ int	skip_sep(int i, char c, char const *s)
 	return (i);
 }
 
-char	**free_splitted(char ***split)
+static char	**free_splitted(char ***split)
 {
 	int	i;
 
 	i = 0;
 	while (*split[i])
-	{
-		free(*split[i]);
-		i++;
-	}
+		free(*split[i++]);
 	free(*split);
 	return (NULL);
 }

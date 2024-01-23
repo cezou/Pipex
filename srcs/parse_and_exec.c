@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_exec.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cezou <cezou@student.42.fr>                +#+  +:+       +#+        */
+/*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:25:46 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/06 23:27:52 by cezou            ###   ########.fr       */
+/*   Updated: 2024/01/23 19:19:36 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,6 @@ char	**parsing(char **env)
 		i++;
 	}
 	if (!path)
-		return ((void)ft_printfd(STDERR, "Missing PATH\n"), exit(127), NULL);
+		return (v_printfd(STDERR, "Missing PATH\n"), exit(127), NULL);
 	return (path);
 }

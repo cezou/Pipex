@@ -6,17 +6,17 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 04:10:22 by cviegas           #+#    #+#             */
-/*   Updated: 2023/11/12 22:00:32 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/22 14:56:42 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <string.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+#include <string.h>
+#include <unistd.h>
 
-size_t	ft_strlen(const char *s);
+size_t		ft_strlen(const char *s);
 
 static char	*strrev(char *s)
 {
@@ -59,6 +59,33 @@ static int	itoa_size(long int n)
 }
 
 char	*ft_itoa(int n)
+{
+	char		*itoa;
+	int			i;
+	long int	long_n;
+
+	long_n = n;
+	i = 0;
+	itoa = malloc(itoa_size(long_n) * sizeof(char));
+	if (!itoa)
+		return (NULL);
+	if (long_n == 0)
+		itoa[i++] = '0';
+	if (long_n < 0)
+	{
+		itoa[i++] = '-';
+		long_n *= -1;
+	}
+	while (long_n > 0)
+	{
+		itoa[i++] = long_n % 10 + '0';
+		long_n /= 10;
+	}
+	itoa[i] = 0;
+	return ((strrev(itoa)));
+}
+
+char	*ft_ltoa(long long int n)
 {
 	char		*itoa;
 	int			i;

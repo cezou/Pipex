@@ -6,13 +6,13 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 05:01:56 by cviegas           #+#    #+#             */
-/*   Updated: 2023/12/04 16:36:05 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/12 19:24:19 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "first_libft.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 t_list	*ft_lstlast(t_list *lst)
 {
