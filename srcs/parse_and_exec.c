@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:25:46 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 15:33:41 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 16:38:29 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	exec_in_path(t_pipex *p)
 	if (is_absolute_path(p->cmd_args[0]))
 		execve(p->cmd_args[0], p->cmd_args, p->env);
 	else
+	{
 		while (p->cmd_path[i])
 		{
 			path_full = join_path(p->cmd_path[i], p->cmd_args[0]);
@@ -44,6 +45,7 @@ void	exec_in_path(t_pipex *p)
 			free(path_full);
 			i++;
 		}
+	}
 	print_split(p->cmd_args);
 	ft_printfd(STDERR, ": command not found\n");
 	clean_pipex(p);

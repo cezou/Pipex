@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 16:15:04 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 16:36:54 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	main(int ac, char **av, char **env)
 	if (ac != 5)
 		return (v_printfd(STDERR, "./pipex infile cmd1 cmd2 outfile\n"),
 			FAILURE);
-	p = init_pipex(ac, av, env);
+	p = init_pipex(ac, env);
 	if (pipe(p.end) < 0)
 		return (clean_pipex(&p), perror("Pipe"), errno);
 	ppid = fork();

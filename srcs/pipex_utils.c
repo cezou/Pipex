@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 22:11:31 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 16:07:35 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 16:37:09 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	errors_handler_fd_out(t_pipex *p, char *file_out)
 		exit(FAILURE);
 }
 
-t_pipex	init_pipex(int ac, char **av, char **env)
+t_pipex	init_pipex(int ac, char **env)
 {
 	t_pipex	p;
 
@@ -38,7 +38,7 @@ t_pipex	init_pipex(int ac, char **av, char **env)
 	p.nb_commands = ac - 2;
 	p.env = env;
 	p.child_wstatus = 0;
-	(void)av;
+	p.i = 0;
 	return (p);
 }
 

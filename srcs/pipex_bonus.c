@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 16:30:03 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 16:36:59 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,29 +67,27 @@ int	main(int ac, char **av, char **env)
 {
 	t_pipex	p;
 	pid_t	ppid;
-	int		i;
 
-	i = 0;
 	if (ac < 5)
 		return (v_printfd(STDERR, "./pipex infile cmd1 ... cmdn outfile\n"), 1);
-	p = init_pipex(ac, av, env);
-	while (i < p.nb_commands - 1)
+	p = init_pipex(ac, env);
+	while (p.i < p.nb_commands - 1)
 	{
 		if (pipe(p.end) < 0)
 			return (clean_pipex(&p), perror("Pipe"), errno);
 		ppid = fork();
 		if (ppid < 0)
 			return (clean_pipex(&p), perror("Fork"), errno);
-		if (!ppid && i == 0)
-			first_child_pid(&p, av, i);
-		if (!ppid && i == p.nb_commands - 2)
-			last_child_pid(&p, av, i);
+		if (!ppid && p.i == 0)
+			first_child_pid(&p, av, p.i);
+		if (!ppid && p.i == p.nb_commands - 2)
+			last_child_pid(&p, av, p.i);
 		if (!ppid)
-			intermediate_child_pid(&p, av, i);
-		dup2(p.end[READ], STDIN);
+			intermediate_child_pid(&p, av, p.i);
 		close(p.end[WRITE]);
+		dup2(p.end[READ], STDIN);
 		close(p.end[READ]);
-		i++;
+		p.i++;
 	}
 	return (parent_ppid(&p));
 }
