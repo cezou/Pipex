@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/23 20:11:08 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 14:22:32 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,41 @@
 
 void	first_pid(t_pipex *p, char **av)
 {
+	p->fd_in = open(av[1], O_RDONLY);
+	p->err_fd_in = strerror(errno);
+	errors_holder_fd_in(p, av[1]);
 	dup2(p->fd_in, STDIN);
 	close(p->fd_in);
 	dup2(p->end[WRITE], STDOUT);
 	close(p->end[READ]);
+	close(p->end[WRITE]);
 	store_commands(p, av);
 	exec_in_path(p, 0);
 	clean_pipex(p);
-	close(p->end[WRITE]);
 	exit(errno);
 }
 
 void	second_pid(t_pipex *p, char **av)
 {
+	p->fd_out = open(av[p->nb_commands + 1], O_CREAT | O_TRUNC | O_RDWR, 0644);
+	p->err_fd_out = strerror(errno);
+	errors_holder_fd_out(p, av[p->nb_commands + 1]);
 	dup2(p->fd_out, STDOUT);
 	close(p->fd_out);
 	close(p->end[WRITE]);
 	dup2(p->end[READ], STDIN);
 	store_commands(p, av);
+	close(p->end[READ]);
 	exec_in_path(p, 1);
 	clean_pipex(p);
-	close(p->end[READ]);
 	exit(errno);
 }
 
-int	parent_ppid(t_pipex *p, pid_t last)
+int	parent_ppid(t_pipex *p)
 {
-	while ("squidgame")
-	{
-		if (wait(&p->child_wstatus) != last)
-			break ;
-	}
+	clean_pipex(p);
+	while (errno != ECHILD)
+		wait(&p->child_wstatus);
 	return (WEXITSTATUS(p->child_wstatus));
 }
 
@@ -53,8 +57,6 @@ int	main(int ac, char **av, char **env)
 	t_pipex	p;
 	pid_t	ppid;
 
-	if (!env)
-		return (v_printfd(STDERR, "Env not found"), FAILURE);
 	if (ac != 5)
 		return (v_printfd(STDERR, "./pipex infile cmd1 cmd2 outfile\n"),
 			FAILURE);
@@ -71,5 +73,5 @@ int	main(int ac, char **av, char **env)
 		return (clean_pipex(&p), perror("Fork"), errno);
 	if (!ppid)
 		second_pid(&p, av);
-	return (parent_ppid(&p, ppid));
+	return (parent_ppid(&p));
 }
