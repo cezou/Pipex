@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/23 20:11:50 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:24:00 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,28 +39,17 @@
 // 	exit(errno);
 // }
 
-// void	parent_ppid(t_pipex *p, char **av)
-// {
-// 	int	i;
-
-// 	i = -1;
-// 	while (++i < p->nb_commands - 1)
-// 		waitpid(-1, &p->child_wstatus, 0);
-// 	close(p->end[WRITE]);
-// 	clean_pipex(p);
-// 	close(p->end[READ]);
-// 	close(p->fd_out);
-// 	exit(errno);
-// }
-
 void	first_child_pid(t_pipex *p, char **av, int i)
 {
+	p->fd_in = open(av[1], O_RDONLY);
+	p->err_fd_in = strerror(errno);
+	errors_holder_fd_in(p, av[1]);
 	dup2(p->fd_in, STDIN);
 	close(p->fd_in);
 	close(p->end[READ]);
 	dup2(p->end[WRITE], STDOUT);
-	store_commands(p, av);
-	exec_in_path(p, i);
+	store_commands(p, av, i);
+	exec_in_path(p);
 	clean_pipex(p);
 	close(p->end[WRITE]);
 	exit(errno);
@@ -68,24 +57,25 @@ void	first_child_pid(t_pipex *p, char **av, int i)
 
 void	last_child_pid(t_pipex *p, char **av, int i)
 {
+	p->fd_out = open(av[p->nb_commands + 1], O_CREAT | O_TRUNC | O_RDWR, 0644);
+	p->err_fd_out = strerror(errno);
+	errors_holder_fd_out(p, av[p->nb_commands + 1]);
 	dup2(p->fd_out, STDOUT);
 	close(p->fd_out);
 	close(p->end[WRITE]);
 	dup2(p->end[READ], STDIN);
-	store_commands(p, av);
-	exec_in_path(p, i);
+	store_commands(p, av, i);
+	exec_in_path(p);
 	clean_pipex(p);
 	close(p->end[READ]);
 	exit(errno);
 }
 
-static int	parent_ppid(t_pipex *p, pid_t last)
+int	parent_ppid(t_pipex *p)
 {
-	while ("squidgame")
-	{
-		if (wait(&p->child_wstatus) != last)
-			break ;
-	}
+	clean_pipex(p);
+	while (errno != ECHILD)
+		wait(&p->child_wstatus);
 	return (WEXITSTATUS(p->child_wstatus));
 }
 
@@ -97,7 +87,7 @@ int	main(int ac, char **av, char **env)
 
 	i = 0;
 	if (ac < 5)
-		return (ft_printfd(2, "./pipex infile cmd1 ... cmdn outfile\n"), 1);
+		return (v_printfd(STDERR, "./pipex infile cmd1 ... cmdn outfile\n"), 1);
 	p = init_pipex(ac, av, env);
 	if (pipe(p.end) < 0)
 		return (clean_pipex(&p), perror("Pipe"), errno);
@@ -115,5 +105,5 @@ int	main(int ac, char **av, char **env)
 		p.is_first = false;
 		i++;
 	}
-	return (parent_ppid(&p, ppid));
+	return (parent_ppid(&p));
 }

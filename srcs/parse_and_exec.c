@@ -6,11 +6,25 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:25:46 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 15:00:15 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:33:41 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+bool	is_absolute_path(char *command)
+{
+	size_t	i;
+
+	i = 0;
+	while (command[i])
+	{
+		if (command[i] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 void	exec_in_path(t_pipex *p)
 {
@@ -18,15 +32,18 @@ void	exec_in_path(t_pipex *p)
 	size_t	i;
 
 	i = 0;
-	while (p->cmd_path[i])
-	{
-		path_full = join_path(p->cmd_path[i], p->cmd_args[0]);
-		if (!path_full)
-			return (clean_pipex(p), perror("Malloc"), exit(errno));
-		execve(path_full, p->cmd_args, p->env);
-		free(path_full);
-		i++;
-	}
+	if (is_absolute_path(p->cmd_args[0]))
+		execve(p->cmd_args[0], p->cmd_args, p->env);
+	else
+		while (p->cmd_path[i])
+		{
+			path_full = join_path(p->cmd_path[i], p->cmd_args[0]);
+			if (!path_full)
+				return (clean_pipex(p), perror("Malloc"), exit(errno));
+			execve(path_full, p->cmd_args, p->env);
+			free(path_full);
+			i++;
+		}
 	print_split(p->cmd_args);
 	ft_printfd(STDERR, ": command not found\n");
 	clean_pipex(p);
