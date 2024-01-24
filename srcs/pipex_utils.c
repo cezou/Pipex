@@ -6,13 +6,13 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 22:11:31 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 15:23:54 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 16:07:35 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	errors_holder_fd_in(t_pipex *p, char *file_in)
+void	errors_handler_fd_in(t_pipex *p, char *file_in)
 {
 	if (p->fd_in == -1)
 		ft_printfd(STDERR, "%s: %s\n", file_in, p->err_fd_in);
@@ -20,7 +20,7 @@ void	errors_holder_fd_in(t_pipex *p, char *file_in)
 		exit(SUCCESS);
 }
 
-void	errors_holder_fd_out(t_pipex *p, char *file_out)
+void	errors_handler_fd_out(t_pipex *p, char *file_out)
 {
 	if (p->fd_out == -1)
 		ft_printfd(STDERR, "%s: %s\n", file_out, p->err_fd_out);
@@ -37,8 +37,6 @@ t_pipex	init_pipex(int ac, char **av, char **env)
 	p.whitespaces = NULL;
 	p.nb_commands = ac - 2;
 	p.env = env;
-	p.is_first = true;
-	p.is_last = false;
 	p.child_wstatus = 0;
 	(void)av;
 	return (p);

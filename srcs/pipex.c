@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 15:24:25 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 16:15:04 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	first_pid(t_pipex *p, char **av)
 {
 	p->fd_in = open(av[1], O_RDONLY);
 	p->err_fd_in = strerror(errno);
-	errors_holder_fd_in(p, av[1]);
+	errors_handler_fd_in(p, av[1]);
 	dup2(p->fd_in, STDIN);
 	close(p->fd_in);
 	dup2(p->end[WRITE], STDOUT);
@@ -32,13 +32,13 @@ void	second_pid(t_pipex *p, char **av)
 {
 	p->fd_out = open(av[p->nb_commands + 1], O_CREAT | O_TRUNC | O_RDWR, 0644);
 	p->err_fd_out = strerror(errno);
-	errors_holder_fd_out(p, av[p->nb_commands + 1]);
+	errors_handler_fd_out(p, av[p->nb_commands + 1]);
 	dup2(p->fd_out, STDOUT);
 	close(p->fd_out);
-	close(p->end[WRITE]);
 	dup2(p->end[READ], STDIN);
-	store_commands(p, av, 1);
+	close(p->end[WRITE]);
 	close(p->end[READ]);
+	store_commands(p, av, 1);
 	exec_in_path(p);
 	clean_pipex(p);
 	exit(errno);
