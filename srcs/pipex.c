@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 14:22:32 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 14:59:30 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	first_pid(t_pipex *p, char **av)
 	dup2(p->end[WRITE], STDOUT);
 	close(p->end[READ]);
 	close(p->end[WRITE]);
-	store_commands(p, av);
-	exec_in_path(p, 0);
+	store_commands(p, av, 0);
+	exec_in_path(p);
 	clean_pipex(p);
 	exit(errno);
 }
@@ -37,9 +37,9 @@ void	second_pid(t_pipex *p, char **av)
 	close(p->fd_out);
 	close(p->end[WRITE]);
 	dup2(p->end[READ], STDIN);
-	store_commands(p, av);
+	store_commands(p, av, 1);
 	close(p->end[READ]);
-	exec_in_path(p, 1);
+	exec_in_path(p);
 	clean_pipex(p);
 	exit(errno);
 }

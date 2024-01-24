@@ -6,13 +6,13 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:25:46 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/23 19:19:36 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:00:15 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	exec_in_path(t_pipex *p, size_t cmd)
+void	exec_in_path(t_pipex *p)
 {
 	char	*path_full;
 	size_t	i;
@@ -20,14 +20,14 @@ void	exec_in_path(t_pipex *p, size_t cmd)
 	i = 0;
 	while (p->cmd_path[i])
 	{
-		path_full = join_path(p->cmd_path[i], p->cmd_args[cmd][0]);
+		path_full = join_path(p->cmd_path[i], p->cmd_args[0]);
 		if (!path_full)
 			return (clean_pipex(p), perror("Malloc"), exit(errno));
-		execve(path_full, p->cmd_args[cmd], p->env);
+		execve(path_full, p->cmd_args, p->env);
 		free(path_full);
 		i++;
 	}
-	print_split(p->cmd_args[cmd]);
+	print_split(p->cmd_args);
 	ft_printfd(STDERR, ": command not found\n");
 	clean_pipex(p);
 	exit(127);

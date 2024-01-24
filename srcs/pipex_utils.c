@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 22:11:31 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 14:17:39 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/24 15:03:38 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ t_pipex	init_pipex(int ac, char **av, char **env)
 
 	p.cmd_args = NULL;
 	p.cmd_path = NULL;
+	p.whitespaces = NULL;
 	p.nb_commands = ac - 2;
 	p.env = env;
 	p.is_first = true;
@@ -43,43 +44,32 @@ t_pipex	init_pipex(int ac, char **av, char **env)
 	return (p);
 }
 
-void	store_commands(t_pipex *p, char **av)
+void	store_commands(t_pipex *p, char **av, int i)
 {
-	int	i;
-
 	p->cmd_path = parsing(p->env);
+	p->whitespaces = str_whitespaces();
 	if (!p->cmd_path)
 		return (clean_pipex(p), exit(errno));
-	p->cmd_args = malloc(sizeof(char **) * (p->nb_commands + 1));
+	if (!av[i + 2][0])
+		return (clean_pipex(p), v_printfd(STDERR, "permission denied:\n"),
+			exit(errno));
+	p->cmd_args = malloc(sizeof(char *) * (ft_nb_mots(av[i + 2],
+					p->whitespaces)));
 	if (!p->cmd_args)
 		return (clean_pipex(p), perror("Malloc"), exit(errno));
-	i = 0;
-	while (i < p->nb_commands)
-	{
-		p->cmd_args[i] = ft_split(av[i + 2], ' ');
-		if (!p->cmd_args[i])
-			return (clean_pipex(p), perror("Malloc"), exit(errno));
-		i++;
-	}
-	p->cmd_args[i] = NULL;
+	p->cmd_args = ft_split_charset(av[i + 2], p->whitespaces);
+	if (!p->cmd_args)
+		return (clean_pipex(p), perror("Malloc"), exit(errno));
 }
 
 void	clean_pipex(t_pipex *p)
 {
-	int	i;
-
+	if (p->whitespaces)
+		free(p->whitespaces);
 	if (p->cmd_path)
 		free_split(p->cmd_path);
 	if (p->cmd_args)
-	{
-		i = 0;
-		while (p->cmd_args[i])
-		{
-			free_split(p->cmd_args[i]);
-			i++;
-		}
-		free(p->cmd_args);
-	}
+		free_split(p->cmd_args);
 	close(p->end[READ]);
 	close(p->end[WRITE]);
 }
