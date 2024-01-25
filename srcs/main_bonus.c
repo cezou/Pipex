@@ -1,43 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/25 13:17:05 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/25 14:20:00 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	exec_heredoc(t_pipex *p)
-{
-	char	*line;
-
-	ft_printfd(STDIN, "> ");
-	line = get_next_line(STDIN);
-	while (ft_strncmp(line, p->limiter, ft_strlen(p->limiter))
-		|| ft_strlen(line) - 1 != ft_strlen(p->limiter))
-	{
-		free(line);
-		ft_printfd(STDIN, "> ");
-		line = get_next_line(STDIN);
-	}
-	free(line);
-}
-
 void	first_child_pid(t_pipex *p, char **av, int i)
 {
-	if (!p->is_heredoc)
+	if (p->is_heredoc)
+		p->fd_in = p->end_heredoc[READ];
+	else
 	{
 		p->fd_in = open(av[1], O_RDONLY);
 		p->err_fd_in = strerror(errno);
 		errors_handler_fd_in(p, av[1]);
-		dup2(p->fd_in, STDIN);
-		close(p->fd_in);
 	}
+	dup2(p->fd_in, STDIN);
+	close(p->fd_in);
 	close(p->end[READ]);
 	dup2(p->end[WRITE], STDOUT);
 	close(p->end[WRITE]);
@@ -88,10 +74,10 @@ int	main(int ac, char **av, char **env)
 	pid_t	ppid;
 
 	if (ac < 5)
-		return (v_printfd(STDERR, "./pipex infile cmd1 ... cmdn outfile\n"), 1);
+		return (v_printfd(2,
+				"./pipex [infile | here_doc LIMITER] cmd1 ... cmdn outfile\n"),
+			FAILURE);
 	p = init_pipex(ac, av, env);
-	if (p.is_heredoc)
-		exec_heredoc(&p);
 	while (p.i < p.nb_commands - 1)
 	{
 		if (pipe(p.end) < 0)
@@ -105,9 +91,7 @@ int	main(int ac, char **av, char **env)
 			last_child_pid(&p, av, p.i);
 		if (!ppid)
 			intermediate_child_pid(&p, av, p.i);
-		close(p.end[WRITE]);
-		dup2(p.end[READ], STDIN);
-		close(p.end[READ]);
+		handle_pipes_for_next_child(&p);
 		p.i++;
 	}
 	return (parent_ppid(&p));

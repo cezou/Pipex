@@ -8,10 +8,10 @@ IDIR = include
 LIBFT = $(IDIR)/QuoicouLibft/libft.a
 
 DIR = srcs
-SRCS = $(DIR)/pipex_utils.c $(DIR)/parse_and_exec.c $(DIR)/split_utils.c
+SRCS = $(DIR)/utils.c $(DIR)/parse_and_exec.c $(DIR)/split_utils.c $(DIR)/heredoc_and_pipe_handling.c
 
-MANDATORY = $(DIR)/pipex.c 
-BONUS = $(DIR)/pipex_bonus.c
+MANDATORY = $(DIR)/main.c
+BONUS =  $(DIR)/main_bonus.c
 
 UP = \033[1A
 ERASE = \033[0J

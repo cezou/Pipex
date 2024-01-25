@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 22:11:31 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/25 12:19:27 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/25 14:16:51 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ t_pipex	init_pipex(int ac, char **av, char **env)
 	p.nb_commands = ac - 2;
 	p.env = env;
 	p.child_wstatus = 0;
+	if (p.is_heredoc)
+		exec_heredoc(&p);
 	return (p);
 }
 
@@ -75,4 +77,9 @@ void	clean_pipex(t_pipex *p)
 		free_split(p->cmd_args);
 	close(p->end[READ]);
 	close(p->end[WRITE]);
+	if (p->is_heredoc)
+	{
+		close(p->end_heredoc[WRITE]);
+		close(p->end_heredoc[READ]);
+	}
 }
