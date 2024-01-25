@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 22:13:37 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 16:36:48 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/25 12:15:53 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,25 @@ typedef struct s_pipex
 	char	**cmd_args;
 	char	**cmd_path;
 	char	**env;
+	char	*whitespaces;
 	char	*err_fd_in;
 	char	*err_fd_out;
 	int		fd_in;
 	int		fd_out;
 	int		end[2];
 	int		child_wstatus;
-	char	*whitespaces;
 	size_t	nb_commands;
 	size_t	i;
+	bool	is_heredoc;
+	char	*limiter;
 }			t_pipex;
 
-t_pipex		init_pipex(int ac, char **env);
+t_pipex		init_pipex(int ac, char **av, char **env);
 void		clean_pipex(t_pipex *p);
 void		errors_handler_fd_out(t_pipex *p, char *file_out);
 void		errors_handler_fd_in(t_pipex *p, char *file_in);
 void		store_commands(t_pipex *p, char **av, int i);
 void		exec_in_path(t_pipex *p);
+bool		is_absolute_path(char *command);
 
 #endif

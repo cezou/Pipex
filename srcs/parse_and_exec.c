@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:25:46 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 16:38:29 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/25 12:59:32 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	exec_in_path(t_pipex *p)
 			i++;
 		}
 	}
-	print_split(p->cmd_args);
-	ft_printfd(STDERR, ": command not found\n");
+	(ft_printfd(STDERR, "command not found: "), print_split(p->cmd_args));
+	ft_printfd(STDERR, "\n");
 	clean_pipex(p);
 	exit(127);
 }
@@ -116,6 +116,6 @@ char	**parsing(char **env)
 		i++;
 	}
 	if (!path)
-		return (v_printfd(STDERR, "Missing PATH\n"), exit(127), NULL);
+		return (v_printfd(STDERR, "Missing PATH\n"), NULL);
 	return (path);
 }

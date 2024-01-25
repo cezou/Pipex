@@ -6,14 +6,38 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/24 16:36:59 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/25 13:17:05 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	intermediate_child_pid(t_pipex *p, char **av, int i)
+void	exec_heredoc(t_pipex *p)
 {
+	char	*line;
+
+	ft_printfd(STDIN, "> ");
+	line = get_next_line(STDIN);
+	while (ft_strncmp(line, p->limiter, ft_strlen(p->limiter))
+		|| ft_strlen(line) - 1 != ft_strlen(p->limiter))
+	{
+		free(line);
+		ft_printfd(STDIN, "> ");
+		line = get_next_line(STDIN);
+	}
+	free(line);
+}
+
+void	first_child_pid(t_pipex *p, char **av, int i)
+{
+	if (!p->is_heredoc)
+	{
+		p->fd_in = open(av[1], O_RDONLY);
+		p->err_fd_in = strerror(errno);
+		errors_handler_fd_in(p, av[1]);
+		dup2(p->fd_in, STDIN);
+		close(p->fd_in);
+	}
 	close(p->end[READ]);
 	dup2(p->end[WRITE], STDOUT);
 	close(p->end[WRITE]);
@@ -23,13 +47,8 @@ void	intermediate_child_pid(t_pipex *p, char **av, int i)
 	exit(errno);
 }
 
-void	first_child_pid(t_pipex *p, char **av, int i)
+void	intermediate_child_pid(t_pipex *p, char **av, int i)
 {
-	p->fd_in = open(av[1], O_RDONLY);
-	p->err_fd_in = strerror(errno);
-	errors_handler_fd_in(p, av[1]);
-	dup2(p->fd_in, STDIN);
-	close(p->fd_in);
 	close(p->end[READ]);
 	dup2(p->end[WRITE], STDOUT);
 	close(p->end[WRITE]);
@@ -70,7 +89,9 @@ int	main(int ac, char **av, char **env)
 
 	if (ac < 5)
 		return (v_printfd(STDERR, "./pipex infile cmd1 ... cmdn outfile\n"), 1);
-	p = init_pipex(ac, env);
+	p = init_pipex(ac, av, env);
+	if (p.is_heredoc)
+		exec_heredoc(&p);
 	while (p.i < p.nb_commands - 1)
 	{
 		if (pipe(p.end) < 0)
@@ -78,7 +99,7 @@ int	main(int ac, char **av, char **env)
 		ppid = fork();
 		if (ppid < 0)
 			return (clean_pipex(&p), perror("Fork"), errno);
-		if (!ppid && p.i == 0)
+		if (!ppid && (p.i == 0 || (p.is_heredoc && p.i == 1)))
 			first_child_pid(&p, av, p.i);
 		if (!ppid && p.i == p.nb_commands - 2)
 			last_child_pid(&p, av, p.i);
