@@ -8,7 +8,7 @@ IDIR = include
 LIBFT = $(IDIR)/QuoicouLibft/libft.a
 
 DIR = srcs
-SRCS = $(DIR)/utils.c $(DIR)/parse_and_exec.c $(DIR)/split_utils.c $(DIR)/heredoc_and_pipe_handling.c
+SRCS = $(DIR)/init_and_utils.c $(DIR)/parse_and_exec.c $(DIR)/split_utils.c $(DIR)/heredoc_and_pipe_handling.c
 
 MANDATORY = $(DIR)/main.c
 BONUS =  $(DIR)/main_bonus.c
