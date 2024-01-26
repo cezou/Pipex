@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   init_and_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 22:11:31 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/25 14:16:51 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/26 10:59:50 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	errors_handler_fd_in(t_pipex *p, char *file_in)
 	if (p->fd_in == -1)
 		ft_printfd(STDERR, "%s: %s\n", file_in, p->err_fd_in);
 	if (p->fd_in == -1)
-		exit(SUCCESS);
+		return (clean_pipex(p), exit(SUCCESS));
 }
 
 void	errors_handler_fd_out(t_pipex *p, char *file_out)
@@ -25,7 +25,7 @@ void	errors_handler_fd_out(t_pipex *p, char *file_out)
 	if (p->fd_out == -1)
 		ft_printfd(STDERR, "%s: %s\n", file_out, p->err_fd_out);
 	if (p->fd_out == -1)
-		exit(FAILURE);
+		return (clean_pipex(p), exit(FAILURE));
 }
 
 t_pipex	init_pipex(int ac, char **av, char **env)
@@ -58,10 +58,10 @@ void	store_commands(t_pipex *p, char **av, int i)
 			exit(errno));
 	p->whitespaces = str_whitespaces();
 	p->cmd_args = ft_split_charset(av[i + 2], p->whitespaces);
-	if (!p->cmd_args)
+	if (!p->cmd_args || !p->cmd_args[0])
 		return (clean_pipex(p), perror("Malloc"), exit(errno));
 	if (is_absolute_path(p->cmd_args[0]))
-		return ;
+		return (clean_pipex(p));
 	p->cmd_path = parsing(p->env);
 	if (!p->cmd_path)
 		return (clean_pipex(p), exit(errno));
