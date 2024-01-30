@@ -6,7 +6,7 @@
 /*   By: cviegas <cviegas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 00:27:40 by cviegas           #+#    #+#             */
-/*   Updated: 2024/01/25 14:20:00 by cviegas          ###   ########.fr       */
+/*   Updated: 2024/01/30 11:21:56 by cviegas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	first_child_pid(t_pipex *p, char **av, int i)
 		p->err_fd_in = strerror(errno);
 		errors_handler_fd_in(p, av[1]);
 	}
-	dup2(p->fd_in, STDIN);
-	close(p->fd_in);
+	if (ft_strncmp(av[1], "/dev/stdin", 10) || ft_strlen(av[1]) != 10)
+		(dup2(p->fd_in, STDIN), close(p->fd_in));
 	close(p->end[READ]);
 	dup2(p->end[WRITE], STDOUT);
 	close(p->end[WRITE]);
